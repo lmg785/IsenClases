@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="eca61a4536d740408fc34397464b5fe8" Name="Diagram1" >
+        <EntityTypeShape EntityType="isenModel.ALUMNOS" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="isenModel.CLASES" Width="1.5" PointX="8.25" PointY="1" />
+        <EntityTypeShape EntityType="isenModel.PROFESORES" Width="1.5" PointX="3.75" PointY="0.875" />
+        <EntityTypeShape EntityType="isenModel.REGISTROS" Width="1.5" PointX="0.75" PointY="3.75" />
+        <AssociationConnector Association="isenModel.FK_REGISTROS_ALUMNOS" />
+        <AssociationConnector Association="isenModel.FK_REGISTROS_CLASES" />
+        <EntityTypeShape EntityType="isenModel.ASIGNATURAS" Width="1.5" PointX="6" PointY="3.875" />
+        <EntityTypeShape EntityType="isenModel.MATRICULA" Width="1.5" PointX="8.25" PointY="4.5" />
+        <AssociationConnector Association="isenModel.FK_MATRICULA_ALUMNOS" />
+        <AssociationConnector Association="isenModel.FK_ASIGNATURA_PROFESOR1" />
+        <AssociationConnector Association="isenModel.FK_CLASES_ASIGNATURAS1" />
+        <AssociationConnector Association="isenModel.FK_MATRICULA_ASIGNATURA" />
+        <AssociationConnector Association="isenModel.FK_CLASES_ASIGNATURAS" />
+        <AssociationConnector Association="isenModel.FK_ASIGNATURA_PROFESOR" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

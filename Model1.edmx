@@ -1,0 +1,472 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="isenModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ALUMNOS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DNI" Type="varchar" MaxLength="9" Nullable="false" />
+          <Property Name="NOMBRE" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="APELLIDOS" Type="varchar" MaxLength="100" />
+          <Property Name="PASSWORD" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ASIGNATURAS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TITULO" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="varchar" MaxLength="150" />
+          <Property Name="ID_PROFESOR" Type="int" />
+        </EntityType>
+        <EntityType Name="CLASES">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FECHA" Type="date" Nullable="false" />
+          <Property Name="HORA" Type="time" Precision="7" />
+          <Property Name="ID_ASIGNATURA" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MATRICULA">
+          <Key>
+            <PropertyRef Name="ID_ALUMNO" />
+            <PropertyRef Name="ID_ASIGNATURA" />
+          </Key>
+          <Property Name="ID_ALUMNO" Type="int" Nullable="false" />
+          <Property Name="ID_ASIGNATURA" Type="int" Nullable="false" />
+          <Property Name="FECHA_MATRICULA" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PROFESORES">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DNI" Type="varchar" MaxLength="9" Nullable="false" />
+          <Property Name="NOMBRE" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="APELLIDOS" Type="varchar" MaxLength="100" />
+          <Property Name="PASSWORD" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="REGISTROS">
+          <Key>
+            <PropertyRef Name="ID_ALUMNO" />
+            <PropertyRef Name="ID_CLASE" />
+          </Key>
+          <Property Name="ID_ALUMNO" Type="int" Nullable="false" />
+          <Property Name="ID_CLASE" Type="int" Nullable="false" />
+          <Property Name="ASISTE" Type="bit" />
+          <Property Name="FECHA_REGISTRO" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_ASIGNATURA_PROFESOR">
+          <End Role="PROFESORES" Type="Self.PROFESORES" Multiplicity="0..1" />
+          <End Role="ASIGNATURAS" Type="Self.ASIGNATURAS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROFESORES">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ASIGNATURAS">
+              <PropertyRef Name="ID_PROFESOR" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CLASES_ASIGNATURAS">
+          <End Role="ASIGNATURAS" Type="Self.ASIGNATURAS" Multiplicity="1" />
+          <End Role="CLASES" Type="Self.CLASES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ASIGNATURAS">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CLASES">
+              <PropertyRef Name="ID_ASIGNATURA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MATRICULA_ALUMNOS">
+          <End Role="ALUMNOS" Type="Self.ALUMNOS" Multiplicity="1" />
+          <End Role="MATRICULA" Type="Self.MATRICULA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ALUMNOS">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MATRICULA">
+              <PropertyRef Name="ID_ALUMNO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MATRICULA_ASIGNATURA">
+          <End Role="ASIGNATURAS" Type="Self.ASIGNATURAS" Multiplicity="1" />
+          <End Role="MATRICULA" Type="Self.MATRICULA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ASIGNATURAS">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MATRICULA">
+              <PropertyRef Name="ID_ASIGNATURA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REGISTROS_ALUMNOS">
+          <End Role="ALUMNOS" Type="Self.ALUMNOS" Multiplicity="1" />
+          <End Role="REGISTROS" Type="Self.REGISTROS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ALUMNOS">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="REGISTROS">
+              <PropertyRef Name="ID_ALUMNO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REGISTROS_CLASES">
+          <End Role="CLASES" Type="Self.CLASES" Multiplicity="1" />
+          <End Role="REGISTROS" Type="Self.REGISTROS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CLASES">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="REGISTROS">
+              <PropertyRef Name="ID_CLASE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="isenModelStoreContainer">
+          <EntitySet Name="ALUMNOS" EntityType="Self.ALUMNOS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ASIGNATURAS" EntityType="Self.ASIGNATURAS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CLASES" EntityType="Self.CLASES" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MATRICULA" EntityType="Self.MATRICULA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PROFESORES" EntityType="Self.PROFESORES" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="REGISTROS" EntityType="Self.REGISTROS" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ASIGNATURA_PROFESOR" Association="Self.FK_ASIGNATURA_PROFESOR">
+            <End Role="PROFESORES" EntitySet="PROFESORES" />
+            <End Role="ASIGNATURAS" EntitySet="ASIGNATURAS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CLASES_ASIGNATURAS" Association="Self.FK_CLASES_ASIGNATURAS">
+            <End Role="ASIGNATURAS" EntitySet="ASIGNATURAS" />
+            <End Role="CLASES" EntitySet="CLASES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MATRICULA_ALUMNOS" Association="Self.FK_MATRICULA_ALUMNOS">
+            <End Role="ALUMNOS" EntitySet="ALUMNOS" />
+            <End Role="MATRICULA" EntitySet="MATRICULA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MATRICULA_ASIGNATURA" Association="Self.FK_MATRICULA_ASIGNATURA">
+            <End Role="ASIGNATURAS" EntitySet="ASIGNATURAS" />
+            <End Role="MATRICULA" EntitySet="MATRICULA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REGISTROS_ALUMNOS" Association="Self.FK_REGISTROS_ALUMNOS">
+            <End Role="ALUMNOS" EntitySet="ALUMNOS" />
+            <End Role="REGISTROS" EntitySet="REGISTROS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REGISTROS_CLASES" Association="Self.FK_REGISTROS_CLASES">
+            <End Role="CLASES" EntitySet="CLASES" />
+            <End Role="REGISTROS" EntitySet="REGISTROS" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="isenModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="isenEntities" annotation:LazyLoadingEnabled="true" >
+          <EntitySet Name="ALUMNOS" EntityType="isenModel.ALUMNOS" />
+          <EntitySet Name="CLASES" EntityType="isenModel.CLASES" />
+          <EntitySet Name="PROFESORES" EntityType="isenModel.PROFESORES" />
+          <EntitySet Name="REGISTROS" EntityType="isenModel.REGISTROS" />
+          <AssociationSet Name="FK_REGISTROS_ALUMNOS" Association="isenModel.FK_REGISTROS_ALUMNOS">
+            <End Role="ALUMNOS" EntitySet="ALUMNOS" />
+            <End Role="REGISTROS" EntitySet="REGISTROS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_REGISTROS_CLASES" Association="isenModel.FK_REGISTROS_CLASES">
+            <End Role="CLASES" EntitySet="CLASES" />
+            <End Role="REGISTROS" EntitySet="REGISTROS" />
+          </AssociationSet>
+          <EntitySet Name="ASIGNATURAS" EntityType="isenModel.ASIGNATURAS" />
+          <EntitySet Name="MATRICULA" EntityType="isenModel.MATRICULA" />
+          <AssociationSet Name="FK_MATRICULA_ALUMNOS" Association="isenModel.FK_MATRICULA_ALUMNOS">
+            <End Role="ALUMNOS" EntitySet="ALUMNOS" />
+            <End Role="MATRICULA" EntitySet="MATRICULA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ASIGNATURA_PROFESOR1" Association="isenModel.FK_ASIGNATURA_PROFESOR1">
+            <End Role="PROFESORES" EntitySet="PROFESORES" />
+            <End Role="ASIGNATURAS" EntitySet="ASIGNATURAS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CLASES_ASIGNATURAS1" Association="isenModel.FK_CLASES_ASIGNATURAS1">
+            <End Role="ASIGNATURAS" EntitySet="ASIGNATURAS" />
+            <End Role="CLASES" EntitySet="CLASES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MATRICULA_ASIGNATURA" Association="isenModel.FK_MATRICULA_ASIGNATURA">
+            <End Role="ASIGNATURAS" EntitySet="ASIGNATURAS" />
+            <End Role="MATRICULA" EntitySet="MATRICULA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CLASES_ASIGNATURAS" Association="isenModel.FK_CLASES_ASIGNATURAS">
+            <End Role="ASIGNATURAS" EntitySet="ASIGNATURAS" />
+            <End Role="CLASES" EntitySet="CLASES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ASIGNATURA_PROFESOR" Association="isenModel.FK_ASIGNATURA_PROFESOR">
+            <End Role="PROFESORES" EntitySet="PROFESORES" />
+            <End Role="ASIGNATURAS" EntitySet="ASIGNATURAS" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="ALUMNOS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="DNI" Type="String" Nullable="false" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="NOMBRE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="APELLIDOS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PASSWORD" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="REGISTROS" Relationship="isenModel.FK_REGISTROS_ALUMNOS" FromRole="ALUMNOS" ToRole="REGISTROS" />
+          <NavigationProperty Name="MATRICULA" Relationship="isenModel.FK_MATRICULA_ALUMNOS" FromRole="ALUMNOS" ToRole="MATRICULA" />
+        </EntityType>
+        <EntityType Name="CLASES">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FECHA" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="HORA" Type="Time" Precision="7" />
+          <Property Name="ID_ASIGNATURA" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="REGISTROS" Relationship="isenModel.FK_REGISTROS_CLASES" FromRole="CLASES" ToRole="REGISTROS" />
+          <NavigationProperty Name="ASIGNATURAS" Relationship="isenModel.FK_CLASES_ASIGNATURAS1" FromRole="CLASES" ToRole="ASIGNATURAS" />
+          <NavigationProperty Name="ASIGNATURAS1" Relationship="isenModel.FK_CLASES_ASIGNATURAS" FromRole="CLASES" ToRole="ASIGNATURAS" />
+        </EntityType>
+        <EntityType Name="PROFESORES">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DNI" Type="String" Nullable="false" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="NOMBRE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="APELLIDOS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PASSWORD" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ASIGNATURAS" Relationship="isenModel.FK_ASIGNATURA_PROFESOR1" FromRole="PROFESORES" ToRole="ASIGNATURAS" />
+          <NavigationProperty Name="ASIGNATURAS1" Relationship="isenModel.FK_ASIGNATURA_PROFESOR" FromRole="PROFESORES" ToRole="ASIGNATURAS" />
+        </EntityType>
+        <EntityType Name="REGISTROS">
+          <Key>
+            <PropertyRef Name="ID_ALUMNO" />
+            <PropertyRef Name="ID_CLASE" />
+          </Key>
+          <Property Name="ID_ALUMNO" Type="Int32" Nullable="false" />
+          <Property Name="ID_CLASE" Type="Int32" Nullable="false" />
+          <Property Name="ASISTE" Type="Boolean" />
+          <Property Name="FECHA_REGISTRO" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="ALUMNOS" Relationship="isenModel.FK_REGISTROS_ALUMNOS" FromRole="REGISTROS" ToRole="ALUMNOS" />
+          <NavigationProperty Name="CLASES" Relationship="isenModel.FK_REGISTROS_CLASES" FromRole="REGISTROS" ToRole="CLASES" />
+        </EntityType>
+        <Association Name="FK_REGISTROS_ALUMNOS">
+          <End Type="isenModel.ALUMNOS" Role="ALUMNOS" Multiplicity="1" />
+          <End Type="isenModel.REGISTROS" Role="REGISTROS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ALUMNOS">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="REGISTROS">
+              <PropertyRef Name="ID_ALUMNO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_REGISTROS_CLASES">
+          <End Type="isenModel.CLASES" Role="CLASES" Multiplicity="1" />
+          <End Type="isenModel.REGISTROS" Role="REGISTROS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CLASES">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="REGISTROS">
+              <PropertyRef Name="ID_CLASE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ASIGNATURAS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TITULO" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="ID_PROFESOR" Type="Int32" />
+          <NavigationProperty Name="PROFESORES" Relationship="isenModel.FK_ASIGNATURA_PROFESOR1" FromRole="ASIGNATURAS" ToRole="PROFESORES" />
+          <NavigationProperty Name="CLASES" Relationship="isenModel.FK_CLASES_ASIGNATURAS1" FromRole="ASIGNATURAS" ToRole="CLASES" />
+          <NavigationProperty Name="MATRICULA" Relationship="isenModel.FK_MATRICULA_ASIGNATURA" FromRole="ASIGNATURAS" ToRole="MATRICULA" />
+          <NavigationProperty Name="CLASES1" Relationship="isenModel.FK_CLASES_ASIGNATURAS" FromRole="ASIGNATURAS" ToRole="CLASES" />
+          <NavigationProperty Name="PROFESORES1" Relationship="isenModel.FK_ASIGNATURA_PROFESOR" FromRole="ASIGNATURAS" ToRole="PROFESORES" />
+        </EntityType>
+        <EntityType Name="MATRICULA">
+          <Key>
+            <PropertyRef Name="ID_ALUMNO" />
+            <PropertyRef Name="ID_ASIGNATURA" />
+          </Key>
+          <Property Name="ID_ALUMNO" Type="Int32" Nullable="false" />
+          <Property Name="ID_ASIGNATURA" Type="Int32" Nullable="false" />
+          <Property Name="FECHA_MATRICULA" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="ALUMNOS" Relationship="isenModel.FK_MATRICULA_ALUMNOS" FromRole="MATRICULA" ToRole="ALUMNOS" />
+          <NavigationProperty Name="ASIGNATURAS" Relationship="isenModel.FK_MATRICULA_ASIGNATURA" FromRole="MATRICULA" ToRole="ASIGNATURAS" />
+        </EntityType>
+        <Association Name="FK_MATRICULA_ALUMNOS">
+          <End Type="isenModel.ALUMNOS" Role="ALUMNOS" Multiplicity="1" />
+          <End Type="isenModel.MATRICULA" Role="MATRICULA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ALUMNOS">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MATRICULA">
+              <PropertyRef Name="ID_ALUMNO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ASIGNATURA_PROFESOR1">
+          <End Type="isenModel.PROFESORES" Role="PROFESORES" Multiplicity="1" />
+          <End Type="isenModel.ASIGNATURAS" Role="ASIGNATURAS" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="PROFESORES">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ASIGNATURAS">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CLASES_ASIGNATURAS1">
+          <End Type="isenModel.ASIGNATURAS" Role="ASIGNATURAS" Multiplicity="1" />
+          <End Type="isenModel.CLASES" Role="CLASES" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="ASIGNATURAS">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CLASES">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MATRICULA_ASIGNATURA">
+          <End Type="isenModel.ASIGNATURAS" Role="ASIGNATURAS" Multiplicity="1" />
+          <End Type="isenModel.MATRICULA" Role="MATRICULA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ASIGNATURAS">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MATRICULA">
+              <PropertyRef Name="ID_ASIGNATURA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CLASES_ASIGNATURAS">
+          <End Type="isenModel.ASIGNATURAS" Role="ASIGNATURAS" Multiplicity="1" />
+          <End Type="isenModel.CLASES" Role="CLASES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ASIGNATURAS">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CLASES">
+              <PropertyRef Name="ID_ASIGNATURA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ASIGNATURA_PROFESOR">
+          <End Type="isenModel.PROFESORES" Role="PROFESORES" Multiplicity="0..1" />
+          <End Type="isenModel.ASIGNATURAS" Role="ASIGNATURAS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROFESORES">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ASIGNATURAS">
+              <PropertyRef Name="ID_PROFESOR" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="isenModelStoreContainer" CdmEntityContainer="isenEntities" >
+          <EntitySetMapping Name="ALUMNOS">
+            <EntityTypeMapping TypeName="isenModel.ALUMNOS">
+              <MappingFragment StoreEntitySet="ALUMNOS">
+                <ScalarProperty Name="PASSWORD" ColumnName="PASSWORD" />
+                <ScalarProperty Name="APELLIDOS" ColumnName="APELLIDOS" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="DNI" ColumnName="DNI" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CLASES">
+            <EntityTypeMapping TypeName="isenModel.CLASES">
+              <MappingFragment StoreEntitySet="CLASES">
+                <ScalarProperty Name="ID_ASIGNATURA" ColumnName="ID_ASIGNATURA" />
+                <ScalarProperty Name="HORA" ColumnName="HORA" />
+                <ScalarProperty Name="FECHA" ColumnName="FECHA" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PROFESORES">
+            <EntityTypeMapping TypeName="isenModel.PROFESORES">
+              <MappingFragment StoreEntitySet="PROFESORES">
+                <ScalarProperty Name="PASSWORD" ColumnName="PASSWORD" />
+                <ScalarProperty Name="APELLIDOS" ColumnName="APELLIDOS" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="DNI" ColumnName="DNI" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="REGISTROS">
+            <EntityTypeMapping TypeName="isenModel.REGISTROS">
+              <MappingFragment StoreEntitySet="REGISTROS">
+                <ScalarProperty Name="FECHA_REGISTRO" ColumnName="FECHA_REGISTRO" />
+                <ScalarProperty Name="ASISTE" ColumnName="ASISTE" />
+                <ScalarProperty Name="ID_CLASE" ColumnName="ID_CLASE" />
+                <ScalarProperty Name="ID_ALUMNO" ColumnName="ID_ALUMNO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ASIGNATURAS">
+            <EntityTypeMapping TypeName="isenModel.ASIGNATURAS">
+              <MappingFragment StoreEntitySet="ASIGNATURAS">
+                <ScalarProperty Name="ID_PROFESOR" ColumnName="ID_PROFESOR" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+                <ScalarProperty Name="TITULO" ColumnName="TITULO" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MATRICULA">
+            <EntityTypeMapping TypeName="isenModel.MATRICULA">
+              <MappingFragment StoreEntitySet="MATRICULA">
+                <ScalarProperty Name="FECHA_MATRICULA" ColumnName="FECHA_MATRICULA" />
+                <ScalarProperty Name="ID_ASIGNATURA" ColumnName="ID_ASIGNATURA" />
+                <ScalarProperty Name="ID_ALUMNO" ColumnName="ID_ALUMNO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
