@@ -31,6 +31,7 @@ namespace IsenClases.Model
         public string Apellidos { get { return _apellidos; } set { _apellidos = value; } }
         public string Password { get { return _password; } set { _password = value; } }
         public string Rol { get { return "E"; } }
+        public bool IsProfesor { get { return false; } }
 
         public List<Asignatura> ListaAsignaturas { get { return _asignaturas; } set { _asignaturas = value; }  }
 
@@ -43,37 +44,12 @@ namespace IsenClases.Model
             _nombre = a.NOMBRE;
             _apellidos = a.APELLIDOS;
             _password = a.PASSWORD;
-        }
-
-        private void Apuntarse(Clases clase) 
-        {
-            Registro r = new Registro()
-            {
-                AlumnoObj = this,
-                ClaseObj = clase,
-                Asistencia = true
-            };
-
-            _clasesApuntadas.Add(r);
-        }
-
-        public void Asistencia(Clases clase) 
-        {
-            int index = _clasesApuntadas.FindIndex(f => f.ClaseObj.IdClase.Equals(clase.IdClase));
-            if (index >= 0)
-            {
-                _clasesApuntadas[index].Asistencia = !_clasesApuntadas[index].Asistencia;
-            }
-            else 
-            {
-                Apuntarse(clase);
-            }
-        }
+        }        
 
         public bool isUsuarioRegistrado(Clases cls) 
         {
             int index = ClasesApuntadas.FindIndex(f => f.ClaseObj.IdClase.Equals(cls.IdClase));
-            return index > 0;
+            return (index > 0 && ClasesApuntadas[index].Asistencia);
         }
 
     }

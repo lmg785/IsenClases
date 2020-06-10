@@ -1,15 +1,28 @@
 ﻿using IsenClases.Model;
 using IsenClases.Repositories;
+using IsenClases.Utils;
 using System;
 using System.Collections.Generic;
-using System.Web.SessionState;
+using System.Web.Mvc;
 
 
 namespace IsenClases.Controllers
 {
-    class HomeController
+
+    public class HomeController : Controller
     {
         private IDbRepository _db;
+        private IUsuario _usuario;
+        
+        public IUsuario Usuario 
+        {
+            get 
+            {
+                if (_usuario == null) _usuario = (IUsuario)System.Web.HttpContext.Current.Session["Usuario"];
+                return _usuario;
+            }
+            set { _usuario = value; }
+        }
 
         private IDbRepository db 
         { 
@@ -21,20 +34,24 @@ namespace IsenClases.Controllers
             } 
         }
 
+        public ActionResult Index()
+        {
+            return View("Index");
+        }
+
         public void InitDb() 
         {
             db.Inicializar();
+            Log.Instance.WriteLog("Información inicializada");
         }
 
-        public Boolean Login(string username, string password, HttpSessionState session) 
+        public Boolean Login(string username, string password) 
         {
-            IsenClases.Model.IUsuario usuario = null;
-            
-            usuario = db.GetUsuario(username);
+            Usuario = db.GetUsuario(username);
 
-            if (usuario != null && password.Equals(usuario.Password))
+            if (Usuario != null && password.Equals(Usuario.Password))
             {
-                session.Add("Usuario", usuario);
+                System.Web.HttpContext.Current.Session.Add("Usuario", Usuario);
                 return true;
             }
 
@@ -53,6 +70,53 @@ namespace IsenClases.Controllers
         public void GetAsignaturas(IUsuario usuario) 
         {
             db.GetAsignaturas(usuario);
+        }
+
+        [HttpPost]
+        public ActionResult Actualizar(FormCollection formCollection)
+        {
+            if (Usuario != null)
+            {
+                if (Int32.TryParse(formCollection["IdClase"], out int idClase))
+                {
+                    if (Usuario.IsProfesor && IsProfesorAsignatura(idClase, Usuario.IdUsuario))
+                    {
+                        string fechaClase = formCollection["fechaClase"];
+                        string horaClase = formCollection["horaClase"];
+                        if (DateTime.TryParse(fechaClase, out DateTime fClase) && TimeSpan.TryParse(horaClase, out TimeSpan hClase))
+                            db.ModificarClase(idClase, fClase, hClase);
+                    }
+                    else if (IsAlumnoAsignatura(idClase, Usuario.IdUsuario)) 
+                    {
+                        string asisteStr = formCollection["asiste"];
+                        if (Boolean.TryParse(asisteStr, out bool asiste)) 
+                        {
+                            db.ModificarAsistencia(idClase, Usuario.IdUsuario, asiste);
+                        }
+                    }
+
+                    return View("Entrada");
+                }
+            }
+            return View("Error");
+        }
+
+        private bool IsAlumnoAsignatura(int idClase, int idUsuario)
+        {
+            return db.IsAlumnoAsignatura(idClase, idUsuario);
+        }
+
+        private bool IsProfesorAsignatura(int idClase, int idUsuario)
+        {
+            return db.IsProfesorAsignatura(idClase, idUsuario);
+        }
+
+        public ActionResult Entrar() 
+        {
+            if (Usuario != null)
+                return View("Entrada");
+            else
+                return View("Error");
         }
 
     }

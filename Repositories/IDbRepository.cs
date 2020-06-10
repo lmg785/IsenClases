@@ -13,5 +13,9 @@ namespace IsenClases.Repositories
         IUsuario GetUsuario(string dni);
         List<Clases> GetClases(IUsuario usuario);
         void GetAsignaturas(IUsuario usuario);
+        bool IsProfesorAsignatura(int idClase, int idUsuario);
+        int ModificarClase(int idClase, DateTime fechaClase, TimeSpan horaClase);
+        bool IsAlumnoAsignatura(int idClase, int idUsuario);
+        void ModificarAsistencia(int idClase, int idUsuario, bool asiste);
     }
 }

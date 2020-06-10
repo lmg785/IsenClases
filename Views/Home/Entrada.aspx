@@ -23,19 +23,25 @@
                 Asignatura: <%= cls.Asignatura.Titulo %> <br />
                 <% if ("E".Equals(usuario.Rol))
                    { %>
+                <form id="claseProgramada_<%=cls.IdClase%>" action="/Home/Actualizar" method="post">
+                    <input type="hidden" name="IdClase" value="<%= cls.IdClase%>" />
                 Fecha: <%= cls.Fecha %> <br />
                 Hora: <%= cls.Hora %> <br />
-                Asistencia: <input type="checkbox" value="<%= ((IsenClases.Model.Alumno)usuario).isUsuarioRegistrado(cls) %>" />
+                Asistencia: <input type="checkbox" name="asiste" value="<%= ((IsenClases.Model.Alumno)usuario).isUsuarioRegistrado(cls) %>" />
+                <p><input type="submit" value="Actualizar" /></p>
+                    </form>
                 <%} else { %>
-                        <form id="claseProgramada_<%=cls.IdClase%>">
+                        <form id="claseProgramada_<%=cls.IdClase%>" action="/Home/Actualizar" method="post">
+                        <input type="hidden" name="IdClase" value="<%= cls.IdClase%>" />
                         Fecha: <input type="text" name="fechaClase" value="<%= cls.Fecha %>" /> <br />
                         Hora: <input type="text" name="horaClase" value="<%= cls.Hora %>" /> <br />
                         Alumnos que han confirmado (<%= cls.ListaAlumnos.Count %>): <br />
                         <%foreach (IsenClases.Model.Alumno alumno in cls.ListaAlumnos ) { %>
                         -<%= alumno.Nombre %> <%=alumno.Apellidos %> (DNI: <%= alumno.Dni %>)<br />
+                            
+                        <% } %>
+                        <p><input type="submit" value="Actualizar" /> </p>
                         </form>
-                    <% } %>
-                    
                 <% } %>
                 <br />
             </div>
@@ -53,7 +59,7 @@
                 <br />
                 Fecha: <input type="text" name="fechaClase" value="" /> <br />
                 Hora: <input type="text" name="horaClase" value="" /> <br />
-                <p><input type="submit" value="Submit" /> </p>
+                <p><input type="submit" value="Generar Nueva Clase" /> </p>
                 </fieldset>
                 </form>
             <% } %>

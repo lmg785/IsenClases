@@ -39,7 +39,7 @@ namespace IsenClases.Model
         public string Apellidos { get { return _apellidos; } set { _apellidos = value; } }
         public string Password { get { return _password; } set { _password = value; } }
         public string Rol { get { return "P"; } }
-
+        public bool IsProfesor { get { return true; } }
         public List<Asignatura> ListaAsignaturas { get { return _asignaturas;  } set { _asignaturas = value; } }
 
         public Profesor() { }

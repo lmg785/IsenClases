@@ -18,6 +18,8 @@ namespace IsenClases.Model
 
         string Rol { get; }
 
+        bool IsProfesor { get; }
+
         List<Asignatura> ListaAsignaturas { get; set; }
     }
 }

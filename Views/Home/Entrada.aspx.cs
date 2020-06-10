@@ -2,14 +2,11 @@
 using IsenClases.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using System.Web.Mvc;
 
 namespace IsenClases.Views
 {
-    public partial class Entrada : System.Web.UI.Page
+    public partial class Entrada : ViewPage
     {
         HomeController controller = new HomeController();
         public List<Clases> clases { get; set; }
@@ -19,7 +16,7 @@ namespace IsenClases.Views
         {
             usuario = (IUsuario)Session["Usuario"];
 
-            if (usuario == null) Response.Redirect("Error.aspx");
+            if (usuario == null) Response.Redirect("/Home/Error");
 
             controller.GetAsignaturas(usuario);
             clases = controller.GetClases(usuario);

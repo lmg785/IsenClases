@@ -15,7 +15,7 @@
             <input type="text" id="Username" name="Username" value="" /><br />
             Password:<br />
             <input type="text" id="Password" name="Password" value="" /><br /><br />
-            <input type="submit" value="Submit" class="submit" />
+            <input type="submit" value="Entrar" class="submit" />
         </div>
     </form>
 </body>

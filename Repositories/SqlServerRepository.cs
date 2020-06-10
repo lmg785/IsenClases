@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.SqlClient;
+using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.UI.WebControls.WebParts;
@@ -178,6 +179,80 @@ namespace IsenClases.Repositories
                         Asignatura asg = new Asignatura(aBD);
                         usuario.ListaAsignaturas.Add(asg);
                     }
+                }
+            }
+        }
+
+        public bool IsProfesorAsignatura(int idClase, int idUsuario)
+        {
+            using (var con = new isenEntities()) 
+            {
+                ASIGNATURAS asignatura = con.ASIGNATURAS.Find(con.CLASES.Find(idClase).ID_ASIGNATURA);
+
+                if (asignatura != null) 
+                {
+                    return asignatura.ID_PROFESOR == idUsuario;
+                }
+            }
+
+            return false;
+        }
+
+        public int ModificarClase(int idClase, DateTime fechaClase, TimeSpan horaClase)
+        {
+            int change = 0;
+            using (var con = new isenEntities()) {
+                CLASES clase = con.CLASES.Find(idClase);
+                if (clase != null) 
+                {
+                    clase.FECHA = fechaClase;
+                    clase.HORA = horaClase;
+                    change = con.SaveChanges();
+                }
+            }
+            return change;
+        }
+
+        public bool IsAlumnoAsignatura(int idClase, int idUsuario)
+        {
+            using (var con = new isenEntities())
+            {
+                ASIGNATURAS asignatura = con.ASIGNATURAS.Find(con.CLASES.Find(idClase).ID_ASIGNATURA);
+
+                if (asignatura != null)
+                {
+                    MATRICULA matricula = con.MATRICULA.Where(x => asignatura.ID == x.ID_ASIGNATURA && idUsuario == x.ID_ALUMNO).SingleOrDefault();
+                    return matricula != null;
+                }
+            }
+
+            return false;
+        }
+
+        public void ModificarAsistencia(int idClase, int idUsuario, bool asiste)
+        {
+            using (var con = new isenEntities()) 
+            {
+                REGISTROS registro = con.REGISTROS.Where(x => x.ID_CLASE == idClase && x.ID_ALUMNO == idUsuario).SingleOrDefault();
+                if (registro == null)
+                {
+                    if (asiste)
+                    {
+                        REGISTROS r = new REGISTROS()
+                        {
+                            ID_ALUMNO = idUsuario,
+                            ID_CLASE = idClase,
+                            ASISTE = true,
+                            FECHA_REGISTRO = DateTime.Now
+                        };
+                        con.REGISTROS.Add(r);
+                    }
+                }
+                else 
+                {
+                    registro.ASISTE = asiste;
+                    registro.FECHA_REGISTRO = DateTime.Now;
+                    con.SaveChanges();
                 }
             }
         }

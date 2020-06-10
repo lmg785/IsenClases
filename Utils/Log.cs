@@ -38,7 +38,14 @@ namespace IsenClases.Utils
         {
             lock (_lock)
             {
-                File.AppendAllText(logFile, "[" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "] " + info + System.Environment.NewLine);
+                try
+                {
+                    File.AppendAllText(logFile, "[" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "] " + info + System.Environment.NewLine);
+                }
+                catch (Exception e) 
+                {
+                    Console.WriteLine("Ha habido un error: " + e.Message);
+                }
             }
         }
     }
